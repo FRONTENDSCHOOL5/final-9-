@@ -34,7 +34,7 @@ export const MainHeader = styled.section`
       flex-shrink: 0;
       width: 60px;
       height: 60px;
-      border-radius: 100%;
+      //border-radius: 100%;
       aspect-ratio: 1/1;
       object-fit: cover;
     }

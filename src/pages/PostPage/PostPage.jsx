@@ -17,7 +17,9 @@ const PostPage = () => {
   const [postsData, setPostsData] = useState([]);
   const [likeClicked, setLikeClicked] = useState(false);
   const [activePostFilter, setActivePostFilter] = useState(0);
-  const [postType, setPostType] = useState('/post/feed/?limit=999&skip=0');
+  //const [postType, setPostType] = useState('/post/feed/?limit=999&skip=0');
+  const [postType, setPostType] = useState('following');
+
   const postFilterArr = ['이웃들의 글', '나의 글'];
   const navigate = useNavigate();
   const { user, updateUser } = useContext(UserContext);
@@ -34,17 +36,22 @@ const PostPage = () => {
     navigate('/post/add-post');
   };
 
-  const url = 'https://api.mandarin.weniv.co.kr';
   const postTypeHandler = (index) => {
-    if (index === 0) {
+    /* if (index === 0) {
       setPostType('/post/feed');
     } else if (index === 1) {
       setPostType(`/post/${user.accountname}/userpost`);
+    } */
+    if (index === 0) {
+      setPostType('following');
+    } else if (index === 1) {
+      setPostType(`${user.accountname}`);
     }
   };
-  const getPosts = async () => {
+
+  const getPosts = /* async */ () => {
     try {
-      const response = await fetch(url + postType, {
+      /* const response = await fetch(url + postType, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -56,15 +63,36 @@ const PostPage = () => {
         setPostsData(data.posts ? data.posts : data.post);
       } else {
         console.error('Error signing up:', response.status);
+      } */
+
+      const response = user.following;
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      // eslint-disable-next-line no-undef
+      const POSTS_API = JSON.parse(process.env.REACT_APP_POSTS_API);
+      if (postType === 'following') {
+        const followingData = response.map((el) => {
+          return USERS_API.filter((user) => user._id === el)[0];
+        });
+        const postData = followingData.map((el) => {
+          return POSTS_API.filter((post) => post.author._id === el._id)[0];
+        });
+        const data = postData.filter((el) => el);
+        data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setPostsData(data);
+      } else {
+        const data = POSTS_API.filter((post) => post.author._id === user._id);
+        data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setPostsData(data);
       }
     } catch (error) {
-      console.error('로그인 실패:', error);
+      //console.error('로그인 실패:', error);
     }
   };
 
-  const postLike = async (postId) => {
+  const postLike = /* async */ (postId) => {
     try {
-      const response = await fetch(url + `/post/${postId}/heart`, {
+      /* const response = await fetch(url + `/post/${postId}/heart`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -76,15 +104,15 @@ const PostPage = () => {
         setLikeClicked((prev) => !prev);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('로그인 실패:', error);
     }
   };
 
-  const unlike = async (postId) => {
+  const unlike = /* async */ (postId) => {
     try {
-      const response = await fetch(url + `/post/${postId}/unheart`, {
+      /* const response = await fetch(url + `/post/${postId}/unheart`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -96,7 +124,7 @@ const PostPage = () => {
         setLikeClicked((prev) => !prev);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('로그인 실패:', error);
     }

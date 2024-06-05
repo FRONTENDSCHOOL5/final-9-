@@ -7,7 +7,6 @@ import addImage from '../../../assets/images/Postpage/addImage.png';
 import { UserContext } from '../../../context/UserContext';
 
 export default function ProfileUpdatePage() {
-  const url = 'https://api.mandarin.weniv.co.kr';
   const { user, updateUser, refresh } = useContext(UserContext);
   const [userInfo, setUserInfo] = useState();
   const navigate = useNavigate();
@@ -27,9 +26,9 @@ export default function ProfileUpdatePage() {
     navigate(-1);
   };
 
-  const getUserProfile = async () => {
+  const getUserProfile = /* async */ () => {
     try {
-      const response = await fetch(url + `/profile/${params.accountname}`, {
+      /*  const response = await fetch(url + `/profile/${params.accountname}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -41,7 +40,11 @@ export default function ProfileUpdatePage() {
         setUserInfo(data.profile);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      const data = USERS_API.filter((user) => user.accountname === params.accountname)[0];
+      setUserInfo(data);
     } catch (error) {
       console.error('실패:', error);
     }
@@ -67,11 +70,11 @@ export default function ProfileUpdatePage() {
     addImageBtn.current.click();
   };
 
-  const previousImgUpload = async () => {
+  const previousImgUpload = /* async */ () => {
     const imgData = new FormData();
     imgData.append('image', selectedImage);
     try {
-      const response = await fetch(url + '/image/uploadfiles', {
+      /*  const response = await fetch(url + '/image/uploadfiles', {
         method: 'POST',
         body: imgData,
       });
@@ -81,7 +84,7 @@ export default function ProfileUpdatePage() {
         setImageUpdateChecker(false);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('실패:', error);
     }
@@ -106,7 +109,7 @@ export default function ProfileUpdatePage() {
   };
 
   useEffect(() => {
-    const transmitFunc = async () => {
+    const transmitFunc = /* async */ () => {
       const profileData = {
         user: {
           username: nicknameRef.current.value,
@@ -116,7 +119,7 @@ export default function ProfileUpdatePage() {
         },
       };
       try {
-        const response = await fetch(url + `/user`, {
+        /*  const response = await fetch(url + `/user`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -138,7 +141,7 @@ export default function ProfileUpdatePage() {
         } else {
           setAccountnameValid(undefined);
           console.error('Error:', response.status);
-        }
+        } */
       } catch (error) {
         console.error('실패:', error);
       }
@@ -232,7 +235,9 @@ export default function ProfileUpdatePage() {
               </DetailList>
             </div>
           </DetailInfoContainer>
-          <UpdateBtn onClick={transProfileUpdateInfo}>수정</UpdateBtn>
+          <UpdateBtn onClick={transProfileUpdateInfo} disabled={true}>
+            수정
+          </UpdateBtn>
         </ProfileDetailContainer>
       </div>
     </section>

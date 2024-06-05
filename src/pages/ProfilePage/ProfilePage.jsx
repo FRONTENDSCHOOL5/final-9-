@@ -6,7 +6,6 @@ import profileimg from '../../assets/images/loginPage/logo.png';
 import { UserContext } from '../../context/UserContext';
 
 export default function ProfilePage() {
-  const url = 'https://api.mandarin.weniv.co.kr';
   const { user, updateUser, refresh } = useContext(UserContext);
   const [userInfo, setUserInfo] = useState();
   const navigate = useNavigate();
@@ -27,21 +26,28 @@ export default function ProfilePage() {
     navigate(`/profile/${params.accountname}/following`);
   };
 
-  const getUserProfile = async () => {
+  const getUserProfile = /* async */ () => {
     try {
-      const response = await fetch(url + `/profile/${params.accountname}`, {
+      /* const response = await fetch(url + `/profile/${params.accountname}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
           'Content-Type': 'application/json',
         },
       });
+      
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setUserInfo(data.profile);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
+
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      const data = USERS_API.filter((user) => user.accountname === params.accountname)[0];
+      setUserInfo(data);
     } catch (error) {
       console.error('실패:', error);
     }
@@ -87,7 +93,7 @@ export default function ProfilePage() {
               </DetailList>
               <DetailList>
                 <span>계정아이디</span>
-                <span>@{userInfo?.accountname}</span>
+                <span>{userInfo?.accountname}</span>
               </DetailList>
               <DetailList>
                 <span>자기소개</span>

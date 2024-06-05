@@ -5,6 +5,7 @@ import { UserContext } from '../../../context/UserContext';
 
 import back from '../../../assets/icons/common/back.png';
 import addImage from '../../../assets/images/Postpage/addImage.png';
+import imageDefault from '../../../assets/images/common/image-default.svg';
 
 import { UpdatePostTop } from './UpdatePostStyle';
 
@@ -16,10 +17,7 @@ const UpdatePost = () => {
     navigate(-1);
   };
   const { user, updateUser } = useContext(UserContext);
-  const url = 'https://api.mandarin.weniv.co.kr';
-  const [imagePreview, setImagePreview] = useState([
-    'https://mandarin.api.weniv.co.kr/Ellipse.png',
-  ]);
+  const [imagePreview, setImagePreview] = useState([imageDefault]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageLength, setImageLength] = useState(0);
   const [loadCheck, setLoadCheck] = useState(0);
@@ -34,9 +32,9 @@ const UpdatePost = () => {
     }
   };
 
-  const getPostInfo = async () => {
+  const getPostInfo = /* async */ () => {
     try {
-      const response = await fetch(url + `/post/${params.postId}`, {
+      /* const response = await fetch(url + `/post/${params.postId}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -56,7 +54,12 @@ const UpdatePost = () => {
         setImageLength(data.post.image.split(',').length);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
+      // eslint-disable-next-line no-undef
+      const POSTS_API = JSON.parse(process.env.REACT_APP_POSTS_API);
+      console.log(POSTS_API);
+      const data = POSTS_API.filter((post) => post.id === params.postId)[0];
+      setPostContent(data.content);
     } catch (error) {
       console.error('로그인 실패:', error);
     }
@@ -108,7 +111,7 @@ const UpdatePost = () => {
     addImageBtn.current.click();
   };
 
-  const previousImgUpload = async () => {
+  const previousImgUpload = /* async */ () => {
     let uploadedImgName = [];
     let fullImgName = '';
     if (imageLength > 1) {
@@ -116,7 +119,7 @@ const UpdatePost = () => {
         const imgData = new FormData();
         imgData.append('image', selectedImage[i]);
         try {
-          const response = await fetch(url + '/image/uploadfiles', {
+          /*  const response = await fetch(url + '/image/uploadfiles', {
             method: 'POST',
             body: imgData,
           });
@@ -125,7 +128,7 @@ const UpdatePost = () => {
             uploadedImgName.push(`https://api.mandarin.weniv.co.kr/${data[0].filename}`);
           } else {
             console.error('Error:', response.status);
-          }
+          } */
         } catch (error) {
           console.error('실패:', error);
         }
@@ -135,7 +138,7 @@ const UpdatePost = () => {
       const imgData = new FormData();
       imgData.append('image', selectedImage);
       try {
-        const response = await fetch(url + '/image/uploadfiles', {
+        /* const response = await fetch(url + '/image/uploadfiles', {
           method: 'POST',
           body: imgData,
         });
@@ -144,7 +147,7 @@ const UpdatePost = () => {
           fullImgName = `https://api.mandarin.weniv.co.kr/${data[0].filename}`;
         } else {
           console.error('Error:', response.status);
-        }
+        } */
       } catch (error) {
         console.error('실패:', error);
       }
@@ -152,8 +155,8 @@ const UpdatePost = () => {
     addPostHandler(fullImgName);
   };
 
-  const addPostHandler = async (newImgFilename) => {
-    if (newImgFilename === 'https://mandarin.api.weniv.co.kr/Ellipse.png') {
+  const addPostHandler = /* async */ (newImgFilename) => {
+    if (newImgFilename === imageDefault) {
       newImgFilename = '';
     }
     const postData = {
@@ -163,7 +166,7 @@ const UpdatePost = () => {
       },
     };
     try {
-      const response = await fetch(url + `/post/${params.postId}`, {
+      /* const response = await fetch(url + `/post/${params.postId}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -176,7 +179,7 @@ const UpdatePost = () => {
         navigate(-1);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('실패:', error);
     }

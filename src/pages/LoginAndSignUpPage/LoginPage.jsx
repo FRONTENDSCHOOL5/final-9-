@@ -34,7 +34,7 @@ export default function Login({ onBack }) {
             return;
           }
 
-          localStorage.setItem('accessToken', _user.token);
+          //localStorage.setItem('accessToken', _user.token);
           localStorage.setItem('user', JSON.stringify(_user));
           updateUser(_user);
           navigate('/main', { replace: true });

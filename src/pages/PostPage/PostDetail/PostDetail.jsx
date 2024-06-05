@@ -41,11 +41,10 @@ const PostPage = () => {
     navigate(`/profile/${userId}`);
   };
 
-  const url = 'https://api.mandarin.weniv.co.kr';
   const params = useParams();
-  const getPosts = async () => {
+  const getPosts = /* async */ () => {
     try {
-      const response = await fetch(url + `/post/${postId}`, {
+      /* const response = await fetch(url + `/post/${postId}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -57,15 +56,19 @@ const PostPage = () => {
         setPostsData(data.post);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
+      // eslint-disable-next-line no-undef
+      const POSTS_API = JSON.parse(process.env.REACT_APP_POSTS_API);
+      const data = POSTS_API.filter((post) => post.id === params.postId)[0];
+      setPostsData(data);
     } catch (error) {
       console.error('로그인 실패:', error);
     }
   };
 
-  const getComments = async () => {
+  const getComments = /* async */ () => {
     try {
-      const response = await fetch(url + `/post/${postId}/comments`, {
+      /* const response = await fetch(url + `/post/${postId}/comments`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -77,13 +80,19 @@ const PostPage = () => {
         setCommentsData(data.comments);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
+
+      // eslint-disable-next-line no-undef
+      const COMMENTS = JSON.parse(process.env.REACT_APP_COMMENTS_API);
+      const postData = COMMENTS.filter((commentObj) => commentObj.postId === params.postId)[0];
+      const data = postData.comments;
+      setCommentsData(data);
     } catch (error) {
-      console.error('로그인 실패:', error);
+      //console.error('댓글이 없습니다:', error);
     }
   };
 
-  const addCommentBtnHandler = async (e) => {
+  const addCommentBtnHandler = /* async */ (e) => {
     e.preventDefault();
     const commentData = {
       comment: {
@@ -91,7 +100,7 @@ const PostPage = () => {
       },
     };
     try {
-      const response = await fetch(url + `/post/${postId}/comments`, {
+      /* const response = await fetch(url + `/post/${postId}/comments`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -104,15 +113,15 @@ const PostPage = () => {
         updateRefresh();
       } else {
         console.error('Error:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('실패:', error);
     }
   };
 
-  const postLike = async (postId) => {
+  const postLike = /* async */ (postId) => {
     try {
-      const response = await fetch(url + `/post/${postId}/heart`, {
+      /* const response = await fetch(url + `/post/${postId}/heart`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -124,15 +133,15 @@ const PostPage = () => {
         setLikeClicked((prev) => !prev);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('로그인 실패:', error);
     }
   };
 
-  const unlike = async (postId) => {
+  const unlike = /* async */ (postId) => {
     try {
-      const response = await fetch(url + `/post/${postId}/unheart`, {
+      /* const response = await fetch(url + `/post/${postId}/unheart`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -144,7 +153,7 @@ const PostPage = () => {
         setLikeClicked((prev) => !prev);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('로그인 실패:', error);
     }
@@ -162,9 +171,9 @@ const PostPage = () => {
     navigate(-1);
   };
 
-  const postReport = async () => {
+  const postReport = /* async */ () => {
     try {
-      const response = await fetch(url + `/post/${postId}/report`, {
+      /*  const response = await fetch(url + `/post/${postId}/report`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -175,7 +184,7 @@ const PostPage = () => {
         // const data = await response.json();
       } else {
         console.error('Error:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('실패:', error);
     }
@@ -205,9 +214,9 @@ const PostPage = () => {
     }
   }
 
-  const deletePostHandler = async () => {
+  const deletePostHandler = /* async */ () => {
     try {
-      const response = await fetch(url + `/post/${postId}`, {
+      /* const response = await fetch(url + `/post/${postId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -219,15 +228,15 @@ const PostPage = () => {
         navigate(-1);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('실패:', error);
     }
   };
 
-  const deleteCommentHandler = async () => {
+  const deleteCommentHandler = /* async */ () => {
     try {
-      const response = await fetch(url + `/post/${postId}/comments/${targetedCommentId}`, {
+      /* const response = await fetch(url + `/post/${postId}/comments/${targetedCommentId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -240,7 +249,7 @@ const PostPage = () => {
         updateRefresh();
       } else {
         console.error('Error:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('실패:', error);
     }
@@ -340,6 +349,7 @@ const PostPage = () => {
                         postLike(postsData?.id);
                       }
                     }}
+                    disabled={true}
                   >
                     <PostsSocialBtn>
                       <img src={postsData?.hearted ? likeActiveIcon : likeIcon} alt='좋아요버튼' />
