@@ -73,9 +73,9 @@ export const signUpApi = async (
   }
 };
 
-export const loginApi = async ({ email, password }, { onSuccess, onError }) => {
+export const loginApi = /* async */ ({ email, password }, { onSuccess, onError }) => {
   try {
-    const response = await fetch('https://api.mandarin.weniv.co.kr/user/login', {
+    /* const response = await fetch('https://api.mandarin.weniv.co.kr/user/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,27 @@ export const loginApi = async ({ email, password }, { onSuccess, onError }) => {
     });
 
     const result = await response.json();
+
     onSuccess(result);
+*/
+    //eslint-disable-next-line
+    const LOGIN_API = JSON.parse(process.env.REACT_APP_LOGIN_API);
+    //eslint-disable-next-line
+    const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+
+    const idMatch = LOGIN_API.find((el) => el.email === email);
+    if (idMatch) {
+      const userObejct = LOGIN_API.filter((el) => el.email === email)[0];
+      if (userObejct.password === password) {
+        const emailInput = email.split('@')[0];
+        const result = {
+          user: USERS_API.filter((el) => emailInput === el.accountname.split('@')[1])[0],
+        };
+        onSuccess(result);
+      } else {
+        throw Error;
+      }
+    }
   } catch (err) {
     onError(err);
   }

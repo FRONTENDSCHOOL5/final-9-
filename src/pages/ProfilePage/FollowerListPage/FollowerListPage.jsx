@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import backIcon from '../../../assets/icons/common/back.png';
 import { UserContext } from '../../../context/UserContext';
 import { useNavigate, useParams } from 'react-router-dom';
+import imageDefault from '../../../assets/images/common/image-default.svg';
 
 export default function FollowerListPage() {
-  const url = 'https://api.mandarin.weniv.co.kr';
   const navigate = useNavigate();
   const { user, updateRefresh, updateUser, refresh } = useContext(UserContext);
   const [searchedFollowingInfo, setSearchedFollowingInfo] = useState();
@@ -16,9 +16,9 @@ export default function FollowerListPage() {
     navigate(-1);
   };
 
-  const getFollowerInfo = async (e) => {
+  const getFollowerInfo = /* async */ (e) => {
     try {
-      const response = await fetch(url + `/profile/${params.accountname}/follower?limit=${999}`, {
+      /*  const response = await fetch(url + `/profile/${params.accountname}/follower?limit=${999}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -31,7 +31,16 @@ export default function FollowerListPage() {
         setFollowerInfo(data);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
+      // eslint-disable-next-line no-undef
+      //console.log(response);
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      const response = USERS_API.filter((el) => el.accountname === params.accountname)[0].follower;
+      const data = response.map((el) => {
+        return USERS_API.filter((user) => user._id === el)[0];
+      });
+      setFollowerInfo(data);
     } catch (error) {
       console.error('로그인 실패:', error);
     }
@@ -52,9 +61,9 @@ export default function FollowerListPage() {
     // eslint-disable-next-line
   }, [refresh]);
 
-  const followingUser = async (userInfo) => {
+  const followingUser = /* async */ (userInfo) => {
     try {
-      const response = await fetch(url + `/profile/${userInfo.accountname}/follow`, {
+      /* const response = await fetch(url + `/profile/${userInfo.accountname}/follow`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -66,15 +75,15 @@ export default function FollowerListPage() {
         updateRefresh();
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('로그인 실패:', error);
     }
   };
 
-  const unfollowingUser = async (userInfo) => {
+  const unfollowingUser = /* async */ (userInfo) => {
     try {
-      const response = await fetch(url + `/profile/${userInfo.accountname}/unfollow`, {
+      /* const response = await fetch(url + `/profile/${userInfo.accountname}/unfollow`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -86,15 +95,15 @@ export default function FollowerListPage() {
         updateRefresh();
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('로그인 실패:', error);
     }
   };
 
-  const getUserFollwingInfo = async () => {
+  const getUserFollwingInfo = /* async */ () => {
     try {
-      const response = await fetch(url + `/profile/${user.accountname}/following`, {
+      /* const response = await fetch(url + `/profile/${user.accountname}/following`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -106,7 +115,16 @@ export default function FollowerListPage() {
         setSearchedFollowingInfo(data);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
+
+      const response = user.following;
+      //console.log(response);
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      const data = response.map((el) => {
+        return USERS_API.filter((user) => user._id === el)[0];
+      });
+      setSearchedFollowingInfo(data);
     } catch (error) {
       console.error('실패:', error);
     }
@@ -135,14 +153,11 @@ export default function FollowerListPage() {
                       }}
                     >
                       <ImgContainer>
-                        <img
-                          src={el.image ? el.image : 'https://mandarin.api.weniv.co.kr/Ellipse.png'}
-                          alt='유저 프로필이미지'
-                        />
+                        <img src={el.image ? el.image : imageDefault} alt='유저 프로필이미지' />
                       </ImgContainer>
                       <SearchedUserInfoDesc>
                         <span>{el.username}</span>
-                        <span>@{el.accountname}</span>
+                        <span>{el.accountname}</span>
                       </SearchedUserInfoDesc>
                     </SearchedUserInfo>
                     {searchedFollowingInfo?.filter((el2) => el2._id === el._id).length === 0 &&
@@ -152,6 +167,7 @@ export default function FollowerListPage() {
                             followingUser(el);
                           }}
                           type={'add'}
+                          disabled={true}
                         >
                           팔로우
                         </FollowBtn>
@@ -163,6 +179,7 @@ export default function FollowerListPage() {
                             followingUser(el);
                           }}
                           type={'delete'}
+                          disabled={true}
                         >
                           나
                         </FollowBtn>
@@ -173,6 +190,7 @@ export default function FollowerListPage() {
                           unfollowingUser(el);
                         }}
                         type={'delete'}
+                        disabled={true}
                       >
                         삭제
                       </FollowBtn>

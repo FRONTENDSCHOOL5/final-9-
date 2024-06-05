@@ -18,36 +18,46 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function MainPage() {
-  const url = 'https://api.mandarin.weniv.co.kr';
   const [donations, setDonations] = useState(0);
   const { user, updateUser, refresh, updateRefresh } = useContext(UserContext);
   const [searchedFollowerInfo, setSearchedFollowerInfo] = useState();
   const [searchedFollowingInfo, setSearchedFollowingInfo] = useState();
   const navigate = useNavigate();
 
-  const getMyFollowingInfo = async () => {
+  const getMyFollowingInfo = /* async */ () => {
     try {
-      const response = await fetch(url + `/profile/${user.accountname}/following`, {
+      /* const response = await fetch(url + `/profile/${user.accountname}/following`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
           'Content-Type': 'application/json',
         },
       });
+      
+
       if (response.ok) {
         const data = await response.json();
         setSearchedFollowingInfo(data);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
+      const response = user.following;
+      //console.log(response);
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      const data = response.map((el) => {
+        return USERS_API.filter((user) => user._id === el)[0];
+      });
+      //console.log(data);
+      setSearchedFollowingInfo(data);
     } catch (error) {
       console.error('실패:', error);
     }
   };
 
-  const getMyFollowerInfo = async () => {
+  const getMyFollowerInfo = /* async */ () => {
     try {
-      const response = await fetch(url + `/profile/${user.accountname}/follower`, {
+      /*  const response = await fetch(url + `/profile/${user.accountname}/follower`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -59,7 +69,16 @@ export default function MainPage() {
         setSearchedFollowerInfo(data);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
+      const response = user.follower;
+      //console.log(response);
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      const data = response.map((el) => {
+        return USERS_API.filter((user) => user._id === el)[0];
+      });
+      //console.log(data);
+      setSearchedFollowerInfo(data);
     } catch (error) {
       console.error('실패:', error);
     }
@@ -88,7 +107,7 @@ export default function MainPage() {
 
   const logoutHandler = () => {
     localStorage.setItem('user', null);
-    localStorage.setItem('accessToken', null);
+    //localStorage.setItem('accessToken', null);
     updateUser('');
     navigate('/');
   };

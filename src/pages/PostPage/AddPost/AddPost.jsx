@@ -5,6 +5,7 @@ import { UserContext } from '../../../context/UserContext';
 
 import back from '../../../assets/icons/common/back.png';
 import addImage from '../../../assets/images/Postpage/addImage.png';
+import imageDefault from '../../../assets/images/common/image-default.svg';
 import { AddPostTop } from './AddPostStyle';
 
 const AddPost = () => {
@@ -13,10 +14,7 @@ const AddPost = () => {
     navigate('/post');
   };
   const { user, updateUser } = useContext(UserContext);
-  const url = 'https://api.mandarin.weniv.co.kr';
-  const [imagePreview, setImagePreview] = useState([
-    'https://mandarin.api.weniv.co.kr/Ellipse.png',
-  ]);
+  const [imagePreview, setImagePreview] = useState([imageDefault]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageLength, setImageLength] = useState(0);
   const [loadCheck, setLoadCheck] = useState(0);
@@ -72,7 +70,7 @@ const AddPost = () => {
   };
 
   const previousImgUpload = async () => {
-    let uploadedImgName = [];
+    /* let uploadedImgName = [];
     let fullImgName = '';
     if (imageLength > 1) {
       for (let i = 0; i < imageLength; i++) {
@@ -112,10 +110,10 @@ const AddPost = () => {
         console.error('실패:', error);
       }
     }
-    addPostHandler(fullImgName);
+    addPostHandler(fullImgName); */
   };
 
-  const addPostHandler = async (newImgFilename) => {
+  const addPostHandler = /* async */ (newImgFilename) => {
     const postData = {
       post: {
         content: postContent,
@@ -123,7 +121,7 @@ const AddPost = () => {
       },
     };
     try {
-      const response = await fetch(url + `/post`, {
+      /* const response = await fetch(url + `/post`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -136,7 +134,7 @@ const AddPost = () => {
         navigate(-1);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('실패:', error);
     }

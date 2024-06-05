@@ -4,9 +4,9 @@ import backIcon from '../../assets/icons/common/back.png';
 import { UserContext } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import searchIcon from '../../assets/icons/common/search-icon.png';
+import userDefault from '../../assets/images/Profile/기본.svg';
 
 export default function SearchPage() {
-  const url = 'https://api.mandarin.weniv.co.kr';
   const navigate = useNavigate();
   const { user, updateRefresh, updateUser, refresh } = useContext(UserContext);
   const [searchedUser, setSearchedUser] = useState('');
@@ -17,10 +17,10 @@ export default function SearchPage() {
     navigate(-1);
   };
 
-  const searchUserBtnHandler = async (e) => {
+  const searchUserBtnHandler = /* async */ (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(url + `/user/searchuser/?keyword=${searchedUser}`, {
+      /* const response = await fetch(url + `/user/searchuser/?keyword=${searchedUser}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -33,7 +33,16 @@ export default function SearchPage() {
         setSearchedUserInfo(data);
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
+
+      const data = [];
+      const pattern = new RegExp(searchedUser, 'i');
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      const matchedAccountname = USERS_API.filter((el) => pattern.test(el.accountname));
+      const matchedUsername = USERS_API.filter((el) => pattern.test(el.username));
+      data.push(...matchedAccountname, ...matchedUsername);
+      setSearchedUserInfo(data);
     } catch (error) {
       console.error('로그인 실패:', error);
     }
@@ -53,9 +62,9 @@ export default function SearchPage() {
     // eslint-disable-next-line
   }, [searchedUserInfo, refresh]);
 
-  const followingUser = async (userInfo) => {
+  const followingUser = /* async */ (userInfo) => {
     try {
-      const response = await fetch(url + `/profile/${userInfo.accountname}/follow`, {
+      /* const response = await fetch(url + `/profile/${userInfo.accountname}/follow`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -67,15 +76,15 @@ export default function SearchPage() {
         updateRefresh();
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('로그인 실패:', error);
     }
   };
 
-  const unfollowingUser = async (userInfo) => {
+  const unfollowingUser = /* async */ (userInfo) => {
     try {
-      const response = await fetch(url + `/profile/${userInfo.accountname}/unfollow`, {
+      /* const response = await fetch(url + `/profile/${userInfo.accountname}/unfollow`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -87,15 +96,15 @@ export default function SearchPage() {
         updateRefresh();
       } else {
         console.error('Error signing up:', response.status);
-      }
+      } */
     } catch (error) {
       console.error('로그인 실패:', error);
     }
   };
 
-  const getMyFollowingInfo = async () => {
+  const getMyFollowingInfo = /* async */ () => {
     try {
-      const response = await fetch(url + `/profile/${user.accountname}/following`, {
+      /* const response = await fetch(url + `/profile/${user.accountname}/following`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -107,7 +116,15 @@ export default function SearchPage() {
         setSearchedFollowingInfo(data);
       } else {
         console.error('Error:', response.status);
-      }
+      } */
+      const response = user.following;
+      //console.log(response);
+      // eslint-disable-next-line no-undef
+      const USERS_API = JSON.parse(process.env.REACT_APP_USERS_API);
+      const data = response.map((el) => {
+        return USERS_API.filter((user) => user._id === el)[0];
+      });
+      setSearchedFollowingInfo(data);
     } catch (error) {
       console.error('실패:', error);
     }
@@ -157,14 +174,11 @@ export default function SearchPage() {
                       }}
                     >
                       <ImgContainer>
-                        <img
-                          src={el.image ? el.image : 'https://mandarin.api.weniv.co.kr/Ellipse.png'}
-                          alt='유저 프로필이미지'
-                        />
+                        <img src={el.image ? el.image : userDefault} alt='유저 프로필이미지' />
                       </ImgContainer>
                       <SearchedUserInfoDesc>
                         <span>{el.username}</span>
-                        <span>@{el.accountname}</span>
+                        <span>{el.accountname}</span>
                       </SearchedUserInfoDesc>
                     </SearchedUserInfo>
                     {searchedFollowingInfo?.filter((el2) => el2._id === el._id).length === 0 &&
@@ -174,6 +188,7 @@ export default function SearchPage() {
                             followingUser(el);
                           }}
                           type={'add'}
+                          disabled={true}
                         >
                           팔로우
                         </FollowBtn>
@@ -185,6 +200,7 @@ export default function SearchPage() {
                             followingUser(el);
                           }}
                           type={'delete'}
+                          disabled={true}
                         >
                           나
                         </FollowBtn>
@@ -195,6 +211,7 @@ export default function SearchPage() {
                           unfollowingUser(el);
                         }}
                         type={'delete'}
+                        disabled={true}
                       >
                         삭제
                       </FollowBtn>
