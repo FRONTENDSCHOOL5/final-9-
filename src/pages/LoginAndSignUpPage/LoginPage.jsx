@@ -18,8 +18,8 @@ import { UserContext } from '../../context/UserContext';
 
 export default function Login({ onBack }) {
   const [hasErrorMessage, setHasErrorMessage] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('wewoo_test@wewoo_test.com');
+  const [password, setPassword] = useState('wewootest!');
   const { user, updateUser } = useContext(UserContext);
 
   const navigate = useNavigate();
