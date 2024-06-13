@@ -1,12 +1,13 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import donationData from '../../../apis/HelpPage/donationApi';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../../context/UserContext';
 
 export default function DonationInform({ getFromInput }) {
   const donations = parseInt(getFromInput ? getFromInput : 0);
   const params = useParams();
+  const navigation = useNavigate();
   const { user, updateUser, refresh, updateRefresh } = useContext(UserContext);
   const userInformation = donationData.filter((el) => {
     return el.id === parseInt(params.donationId);
@@ -42,7 +43,9 @@ export default function DonationInform({ getFromInput }) {
         </DonationDesc>
       </DonationInfoSection>
       <DonationConfirmButtonContainer>
-        <DonationConfirmButton>{donations.toLocaleString()}원을 후원해요</DonationConfirmButton>
+        <DonationConfirmButton onClick={() => navigation('/main')}>
+          {donations.toLocaleString()}원을 후원해요
+        </DonationConfirmButton>
       </DonationConfirmButtonContainer>
     </>
   );

@@ -37,6 +37,7 @@ export const MainHeader = styled.section`
       //border-radius: 100%;
       aspect-ratio: 1/1;
       object-fit: cover;
+      cursor: pointer;
     }
   }
 `;

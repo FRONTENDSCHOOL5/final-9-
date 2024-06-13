@@ -130,6 +130,7 @@ const EmergencyBtn = styled.button`
 `;
 
 const Button = styled.button`
+  cursor: unset;
   text-align: center;
   div {
     width: 32px;
