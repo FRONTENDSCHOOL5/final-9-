@@ -86,6 +86,7 @@ const GridCard = styled.div`
   display: flex;
   flex-direction: column;
   img {
+    background-color: #c4c4c4;
     filter: grayscale(100%);
     width: 160px;
     border-radius: 10px;
