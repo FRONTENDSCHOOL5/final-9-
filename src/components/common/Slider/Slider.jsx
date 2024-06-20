@@ -147,7 +147,7 @@ const Slide = styled.li`
   align-items: center;
   flex-shrink: 0;
   border-radius: 10px;
-  //cursor: pointer;
+  cursor: ${(props) => (props.type === 'help' ? 'pointer' : 'normal')};
 
   &::after {
     content: '';
